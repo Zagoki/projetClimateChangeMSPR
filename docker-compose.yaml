@@ -1,0 +1,37 @@
+version: "3"
+services:
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_PANELS_ENABLE_ALPHA=true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./dashboards:/var/lib/grafana/dashboards:ro,Z
+      - ./grafana-dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml:ro,Z
+      - ./grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro,Z
+
+  influxdb:
+    image: influxdb:2.7.4-alpine
+    container_name: influxdb
+    restart: unless-stopped
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=root
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=epsi
+      - DOCKER_INFLUXDB_INIT_BUCKET=climate-change
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=vha9E75YLyTw0OuBi7h5M2QKlRow70ux
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - ./dataset/line-protocol:/data:ro,Z
+      - ./import.sh:/home/influxdb/import.sh:rw,Z
+
+volumes:
+  influxdb-data:

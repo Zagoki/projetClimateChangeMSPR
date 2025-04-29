@@ -1,0 +1,16 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB Climate Change
+    uid: 154dfc47-2d82-4eb9-8541-ef650a3b9339
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    isDefault: true
+    jsonData:
+      version: Flux
+      organization: epsi
+      defaultBucket: climate-change
+      tlsSkipVerify: true
+    secureJsonData:
+      token: vha9E75YLyTw0OuBi7h5M2QKlRow70ux
